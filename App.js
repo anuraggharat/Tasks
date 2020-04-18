@@ -1,48 +1,79 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, Text, View,Button,TextInput,ScrollView } from 'react-native';
+import { StyleSheet, Text, View,Button,TextInput,ScrollView,Modal, TouchableOpacity } from 'react-native';
 
 export default function App() {
   
-  const [todo, setTodo] = useState("")
+  const [todo, setTodo] = useState({
+    title:"",
+    id:""
+  })
   const [todoslist,setTodoslist]=useState([])
+  const [modalFlag,setModal] = useState(false)
 
 
   const handleChange=(text)=>{
-    setTodo(text)
+    setTodo({
+      title:text,
+      id:Math.floor(Math.random() * 100).toString()
+    })
   }
-
+  const handleModal=(modalFlag)=>{
+    setModal(!modalFlag)
+  }
   const addTodo=()=>{
-    
     console.log(todo)
-
     setTodoslist([...todoslist,todo])
-    setTodo('')
+    setTodo({
+      title:"",
+      id:""
+    })
+    handleModal(modalFlag)
+  }
+  const onDelete=(id)=>{
+    setTodoslist(todoslist.filter(item=>{
+      return item.id !== id
+    }))
   }
 
   return (
     <View style={styles.container}>
       
   <ScrollView style={styles.todosList}>
-          {todoslist.map((item,index)=>{
+          {todoslist.map((item)=>{
             return(
-            <View style={styles.todo} key={index}><Text style={styles.todoText}>{item}</Text></View>
+            <TouchableOpacity key={item.id} onPress={()=>onDelete(item.id)}><View key={item.id} style={styles.todo} ><Text key={item.id} style={styles.todoText}>{item.title}</Text></View></TouchableOpacity>
             )
           })}
       </ScrollView>
       
-      <View style={styles.inputholder} >
-        <TextInput style={styles.input} 
-        placeholder="Add a new Task" 
-        onChangeText={handleChange}
-        value={todo}
-        />
-        <Button 
-        title="Add"
-        style={styles.btn}
-        onPress={addTodo}
-        />
-      </View>
+          <Modal
+            animationType="slide"
+            visible={modalFlag}
+                  >
+                  <View style={styles.inputholder} >
+                    <TextInput style={styles.input} 
+                      placeholder="Add a new Task" 
+                      onChangeText={handleChange}
+                      value={todo.title}
+                    />
+                      <View style={{flexDirection:'row',width:'80%', justifyContent:'space-evenly'}}>
+                        <View style={styles.btn}>
+                          <Button 
+                            title="Add"
+                            style={styles.btn}
+                            onPress={addTodo}
+                          />
+                        </View>
+                        <View  style={styles.btn}>
+                            <Button title="cancel"   color="red" onPress={()=>handleModal(modalFlag)} />
+                        </View>
+                      </View>
+                  </View>
+          </Modal>
+          <View>
+            <Button title="Add a new Task"   color="blue" onPress={()=>handleModal(modalFlag)} />
+          </View>
     </View>
   );
 }
@@ -54,43 +85,39 @@ const styles = StyleSheet.create({
     backgroundColor:'#111'
   },
   input:{
-    borderBottomWidth:1,
-    width:'80%',
-    marginBottom:10,
-    color:'grey',
+    borderBottomWidth:2,
+    width:'90%',
+    marginBottom:20,
+    color:'black',
+    paddingBottom:10,
+    fontSize:20,
   },
   btn:{
-    width:50
+    width:100
   },
   inputholder:{
-    width:'90%',
-    marginLeft:'5%',
-    marginBottom:25,
-    borderRadius:20,
-    marginTop:'auto',
-    flexDirection:'row',
-    paddingVertical:10,
-    paddingHorizontal:30,
+    flex:1,
+    flexDirection:'column',
     backgroundColor:'white',
-    justifyContent:'space-between',
+    justifyContent:'center',
     alignContent:'center',
     alignItems:'center'
   },
   todosList:{
+    paddingTop:20,
     textAlign:'center',
     paddingHorizontal:'5%',
   },
   todo:{
+    marginBottom:10,
     marginHorizontal:'auto',
     width:'100%',
     padding:20,
-    backgroundColor:'#111',
-    color:'white',
-    
+    backgroundColor:'#1a1a1a',
+    color:'white',    
   },
   todoText:{
     fontSize:20,
     color:"white"
   }
-
 });
