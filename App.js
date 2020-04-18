@@ -72,7 +72,7 @@ export default function App() {
                   </View>
           </Modal>
           <View>
-            <Button title="Add a new Task"   color="blue" onPress={()=>handleModal(modalFlag)} />
+            <Button title="Add a new Task"   color="grey" onPress={()=>handleModal(modalFlag)} />
           </View>
     </View>
   );
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop:20,
     flex:1,
-    backgroundColor:'#111'
+    backgroundColor:'#fff'
   },
   input:{
     borderBottomWidth:2,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     marginHorizontal:'auto',
     width:'100%',
     padding:20,
-    backgroundColor:'#1a1a1a',
+    backgroundColor:'#7B8788',
     color:'white',    
   },
   todoText:{
